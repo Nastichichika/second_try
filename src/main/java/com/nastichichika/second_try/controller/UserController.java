@@ -9,6 +9,7 @@ import com.nastichichika.second_try.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/users")
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('TEACHER')")
     public ResponseEntity<List<User>> getAllUsers() {
         try {
             List<User> users = new ArrayList<User>();
@@ -90,19 +92,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/users")
-    public ResponseEntity<HttpStatus> deleteAllTutorials() {
-        try {
-            userRepository.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
     @GetMapping("/users/progress")
-    public ResponseEntity<List<User>> findByProgress(String progress) {
+    public ResponseEntity<List<User>> findByProgress(String progress, int id_course) {
         try {
             List<User> tutorials = userRepository.findByProgress(progress);
 

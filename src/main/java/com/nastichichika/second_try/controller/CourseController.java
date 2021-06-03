@@ -1,9 +1,9 @@
 package com.nastichichika.second_try.controller;
 
 import com.nastichichika.second_try.model.Course;
-import com.nastichichika.second_try.model.User;
+import com.nastichichika.second_try.model.course_teacher;
 import com.nastichichika.second_try.repository.CourseRepository;
-import com.nastichichika.second_try.repository.UserRepository;
+import com.nastichichika.second_try.repository.Teacher_courseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,8 @@ public class CourseController {
 
     @Autowired
     CourseRepository courseRepository;
+    @Autowired
+    Teacher_courseRepository teacher_courseRepository;
 
     @GetMapping("/list")
     public ResponseEntity<List<Course>> getAllCourses() {
@@ -42,31 +44,28 @@ public class CourseController {
     public ResponseEntity<Course> getCourseById(@PathVariable("id") int id) {
         Optional<Course> courseData = courseRepository.findById(id);
 
-        if (courseData.isPresent()) {
-            return new ResponseEntity<>(courseData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return courseData.map(course -> new ResponseEntity<>(course, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @PostMapping("/create")
-    @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<Course> createUser(@RequestBody Course course) {
+    public ResponseEntity<Course> createUser(@RequestBody Course course, int id_teacher) {
         try {
+
             Course _course = courseRepository
-                    .save(new Course(course.getTitle(), course.getTheme()));
+                    .save(new Course(course.getTitle(), course.getTheme(), course.getText()));
+            course_teacher a = teacher_courseRepository
+                    .save(new course_teacher(id_teacher, _course.getId()));
             return new ResponseEntity<>(_course, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/update")
-    @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<Course> updateUser(@PathVariable("id") int id, @RequestBody Course user) {
+    @PostMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('TEACHER')")
+    public ResponseEntity<Course> updateUser(@PathVariable("id") int id, @RequestBody Course course) {
         Optional<Course> tutorialData = courseRepository.findById(id);
-
         if (tutorialData.isPresent()) {
             Course _course = tutorialData.get();
-            _course.setText(user.getText());
+            _course.setText(course.getText());
             return new ResponseEntity<>(courseRepository.save(_course), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -1,9 +1,20 @@
 package com.nastichichika.second_try.model;
 
 import javax.persistence.*;
-
+/*
+{
+   "title": "Math for 1 class",
+   "text":"I like math",
+   "theme":"Math"
+}
+{
+        "title": "Ukraine for 11 class",
+        "text": "Shevchenko ",
+        "theme": "Ukr_lit"
+    }
+*/
 @Entity
-@Table(name = "course")
+@Table(name = "courses")
 public class Course {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -18,9 +29,18 @@ public class Course {
     @Column(name = "theme")
     private String theme;
 
-    public Course(String title, String theme) {
+    @Column(name = "id_teacher")
+    private String id_teacher;
+
+
+    public Course(String title, String theme, String text) {
         this.title = title;
         this.theme = theme;
+        this.text = text;
+    }
+
+    public Course() {
+
     }
 
     public Integer getId() {
