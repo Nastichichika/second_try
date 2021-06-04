@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends CrudRepository<Course, Integer> {
     List<Course> findByTheme(String Theme);
+    List<Course> findCoursesByIdteacher(int id_teacher);
+    void deleteCoursesByIdteacher(int id_teacher);
 
 }

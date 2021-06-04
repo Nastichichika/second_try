@@ -29,8 +29,8 @@ public class Course {
     @Column(name = "theme")
     private String theme;
 
-    @Column(name = "id_teacher")
-    private String id_teacher;
+    @Column(name = "idteacher")
+    private int idteacher;
 
 
     public Course(String title, String theme, String text) {
@@ -41,6 +41,21 @@ public class Course {
 
     public Course() {
 
+    }
+
+    public int getId_teacher() {
+        return idteacher;
+    }
+
+    public void setId_teacher(int id_teacher) {
+        this.idteacher = id_teacher;
+    }
+
+    public Course(String title, String text, String theme, int id_teacher) {
+        this.title = title;
+        this.text = text;
+        this.theme = theme;
+        this.idteacher = id_teacher;
     }
 
     public Integer getId() {

@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
-    List<User> findByProgress(String progress);
+    List<User> findUsersByProgress(String progress);
     User findByLogin(String login);
     Boolean existsByLogin(String login);
-
+    User findUserById(int id);
 }
